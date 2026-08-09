@@ -1,0 +1,33 @@
+# Node.js
+node_modules/
+npm-debug.log*
+package-lock.json
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment & secrets
+.env
+.env.local
+.env.*
+
+# Chrome Extension build artifacts
+*.crx
+*.pem
+*.zip
+
+# IDE & editor directories
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Logs
+logs/
+*.log
+
+# Temp files
+*.tmp
+*.temp

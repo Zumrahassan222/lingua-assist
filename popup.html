@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Language Learning Assistant</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body class="theme-dark">
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="brand-title">
+          <h1>AI Language Assistant</h1>
+          <span class="version-tag">Manifest V3</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="streak-badge" id="streak-badge" title="Daily Streak">
+          🔥 <span id="streak-count">1</span>d
+        </div>
+        <button class="icon-btn" id="theme-toggle" title="Toggle Theme">
+          🌙
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="vocab">
+        📚 Vocab (<span id="vocab-count">0</span>)
+      </button>
+      <button class="nav-tab" data-tab="flashcards">
+        🎴 Flashcards
+      </button>
+      <button class="nav-tab" data-tab="ai-insights">
+        💡 Insights
+      </button>
+      <button class="nav-tab" data-tab="settings">
+        ⚙️ Settings
+      </button>
+    </nav>
+
+    <!-- Tab Content Container -->
+    <main class="tab-content">
+      <!-- TAB 1: VOCABULARY LIST -->
+      <section class="tab-pane active" id="tab-vocab">
+        <div class="filter-bar">
+          <input type="text" id="vocab-search" class="search-input" placeholder="Search saved words...">
+          <select id="vocab-filter-status" class="filter-select">
+            <option value="all">All Words</option>
+            <option value="learning">Learning</option>
+            <option value="mastered">Mastered</option>
+          </select>
+        </div>
+
+        <div class="vocab-list" id="vocab-list">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div class="empty-state hidden" id="vocab-empty">
+          <div class="empty-icon">📖</div>
+          <h3>No Saved Vocabulary Yet</h3>
+          <p>Highlight text on any website and click <strong>Save</strong> to build your list.</p>
+        </div>
+      </section>
+
+      <!-- TAB 2: FLASHCARDS STUDY MODE -->
+      <section class="tab-pane" id="tab-flashcards">
+        <div class="flashcard-container" id="flashcard-container">
+          <div class="flashcard-progress">
+            Card <span id="fc-current">1</span> of <span id="fc-total">0</span>
+          </div>
+
+          <div class="flashcard-wrapper" id="flashcard-wrapper">
+            <div class="flashcard" id="flashcard">
+              <div class="flashcard-front">
+                <div class="fc-tag">Original Word</div>
+                <div class="fc-word" id="fc-front-word">--</div>
+                <div class="fc-hint">Click card to flip 🔄</div>
+              </div>
+              <div class="flashcard-back">
+                <div class="fc-tag">Translation</div>
+                <div class="fc-word" id="fc-back-word">--</div>
+                <div class="fc-phonetic" id="fc-back-phonetic"></div>
+                <div class="fc-tip" id="fc-back-tip"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flashcard-actions">
+            <button class="fc-btn fc-btn-review" id="fc-btn-review">
+              ❌ Need Review
+            </button>
+            <button class="fc-btn fc-btn-speak" id="fc-btn-speak" title="Listen">
+              🔊 Listen
+            </button>
+            <button class="fc-btn fc-btn-know" id="fc-btn-know">
+              ✅ Mastered
+            </button>
+          </div>
+        </div>
+
+        <div class="empty-state hidden" id="fc-empty">
+          <div class="empty-icon">🎉</div>
+          <h3>No Cards Available</h3>
+          <p>Save words while browsing to practice flashcards here!</p>
+        </div>
+      </section>
+
+      <!-- TAB 3: AI INSIGHTS & PRACTICE -->
+      <section class="tab-pane" id="tab-ai-insights">
+        <div class="insight-card">
+          <div class="card-badge">✨ Word of the Day</div>
+          <h3 id="wotd-word">Serendipity</h3>
+          <div class="wotd-translation" id="wotd-trans">Serendipia (Spanish)</div>
+          <p class="wotd-desc" id="wotd-desc">Finding valuable or agreeable things not sought for.</p>
+        </div>
+
+        <div class="insight-card">
+          <div class="card-badge">🤖 Quick AI Practice</div>
+          <p style="font-size:12px;margin-bottom:8px;color:var(--text-secondary)">Test your skills with an AI sentence generator:</p>
+          <div class="ai-practice-box">
+            <button class="btn btn-secondary" id="btn-gen-sentence">Generate Practice Sentence</button>
+            <div class="practice-result hidden" id="practice-result"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: SETTINGS -->
+      <section class="tab-pane" id="tab-settings">
+        <form id="settings-form" class="settings-form">
+          <div class="form-group">
+            <label for="target-lang">Default Target Language</label>
+            <select id="target-lang" class="form-control">
+              <option value="es">Spanish (Español)</option>
+              <option value="en">English</option>
+              <option value="fr">French (Français)</option>
+              <option value="de">German (Deutsch)</option>
+              <option value="it">Italian (Italiano)</option>
+              <option value="pt">Portuguese (Português)</option>
+              <option value="zh">Chinese (中文)</option>
+              <option value="ja">Japanese (日本語)</option>
+              <option value="ko">Korean (한국어)</option>
+              <option value="ru">Russian (Русский)</option>
+              <option value="ar">Arabic (العربية)</option>
+              <option value="hi">Hindi (हिन्दी)</option>
+              <option value="ta">Tamil (தமிழ்)</option>
+              <option value="si">Sinhala (සිංහල)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="api-provider">AI Translation Provider</label>
+            <select id="api-provider" class="form-control">
+              <option value="free">Free Engine (MyMemory/Lingva - No Key Needed)</option>
+              <option value="grok">xAI Grok API (Grok Key)</option>
+              <option value="openai">OpenAI API (GPT Key)</option>
+            </select>
+          </div>
+
+          <!-- GROK API SETTINGS -->
+          <div class="form-group provider-section" id="grok-settings">
+            <label for="grok-api-key">xAI Grok API Key</label>
+            <input type="password" id="grok-api-key" class="form-control" placeholder="xai-xxxxxxxxxxxxxxxxxxxx">
+            <span class="field-hint">Enter your xAI Grok API key from console.x.ai</span>
+            
+            <label for="grok-model" style="margin-top:8px">Grok Model</label>
+            <select id="grok-model" class="form-control">
+              <option value="grok-2-1212">grok-2-1212 (Recommended)</option>
+              <option value="grok-beta">grok-beta</option>
+            </select>
+          </div>
+
+          <!-- OPENAI API SETTINGS -->
+          <div class="form-group provider-section hidden" id="openai-settings">
+            <label for="openai-api-key">OpenAI API Key</label>
+            <input type="password" id="openai-api-key" class="form-control" placeholder="sk-proj-xxxxxxxx">
+
+            <label for="openai-model" style="margin-top:8px">OpenAI Model</label>
+            <select id="openai-model" class="form-control">
+              <option value="gpt-4o-mini">gpt-4o-mini (Fast & Accurate)</option>
+              <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+            </select>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="auto-speak">
+              <span>Auto-play audio when translation appears</span>
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="show-floating-button">
+              <span>Show floating translate button near selected text</span>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="max-input-length">Maximum Input Character Limit</label>
+            <input type="number" id="max-input-length" class="form-control" min="100" max="5000" step="100" value="1000">
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="btn-save-settings">
+              💾 Save Settings
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <!-- Global Toast Notification -->
+    <div class="toast-notification hidden" id="popup-toast"></div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
